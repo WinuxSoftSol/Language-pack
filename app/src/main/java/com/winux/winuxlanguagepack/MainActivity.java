@@ -10,13 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.winux.languagepack.LanguagePack;
+import com.winux.languagepack.views.LocaleTextView;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private AppCompatTextView laguage_text;
+    private LocaleTextView laguage_text;
     private AppCompatSpinner spinner_all_language;
 
     @Override
@@ -45,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 LanguagePack.get().setCurrentLocale(alllocales.get(position));
-                laguage_text.setText(LanguagePack.get().getLocaleLanguage(
-                        "Account already exists - please sign in and contact your school if you require further support."));
+                laguage_text.setText("Account already exists - please sign in and contact your school if you require further support.");
 
             }
 
