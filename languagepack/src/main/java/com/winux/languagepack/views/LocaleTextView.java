@@ -24,7 +24,7 @@ public class LocaleTextView extends AppCompatTextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        if (LanguagePack.get() != null) {
+        if (LanguagePack.isBuild()) {
             text = LanguagePack.get().getLocaleLanguage(text.toString());
         }
         super.setText(text, type);
