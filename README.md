@@ -20,7 +20,7 @@ Step 2. Add the dependency
 
 	
 	dependencies {
-	        implementation 'com.github.WinuxSoftSol:Language-pack:Tag'
+	         implementation 'com.github.WinuxSoftSol:Language-pack:V1.0'
 	}
 	
 
@@ -28,7 +28,7 @@ Step 3. Add the below line in your launcher activity's onCreate() method
 
 	
 	LanguagePack.init()
-                .setAuth(this, "15444", "154455544")
+                .setAuth(this, "Account_id", "app_id")
                 .setEnvironment(LanguagePack.ENVIRONMENT.PRODUCTION)
                 .setMode(LanguagePack.MODE_ONLINE)
                 .setUpdate(LanguagePack.UPDATE_INTERVAL.UPDATE_INTERVAL_2_HOUR)
@@ -69,7 +69,7 @@ Step 2. Add the dependency
 	<dependency>
 	    <groupId>com.github.WinuxSoftSol</groupId>
 	    <artifactId>Language-pack</artifactId>
-	    <version>Tag</version>
+	    <version>V1.0</version>
 	</dependency>
 
 
@@ -93,4 +93,4 @@ Step 1. Add it in your build.sbt at the end of resolvers:
 Step 2. Add the dependency
 
 	
-	libraryDependencies += "com.github.WinuxSoftSol" % "Language-pack" % "Tag"	
+	libraryDependencies += "com.github.WinuxSoftSol" % "Language-pack" % "V1.0"	
