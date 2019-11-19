@@ -5,15 +5,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.winux.languagepack.exceptions.ConfigFailedException;
 import com.winux.languagepack.exceptions.InstanceAlreadyCreatedException;
 import com.winux.languagepack.exceptions.InstanceNotFoundException;
@@ -23,27 +20,24 @@ import com.winux.languagepack.util.DataProccessor;
 import com.winux.languagepack.util.DataUpdator;
 import com.winux.languagepack.util.ResourceCreator;
 
-import org.json.JSONObject;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class WinuxLang implements Cloneable {
+public class LanguagePack implements Cloneable {
 
-    private static final String TAG = "WinuxLang";
-    private static final String INSTANCE_ALREADY_CREATED = "Instance of this class is already created please use WinuxLang.init() to get instance";
+    private static final String TAG = "LanguagePack";
+    private static final String INSTANCE_ALREADY_CREATED = "Instance of this class is already created please use LanguagePack.init() to get instance";
 
     public static final int MODE_OFFLINE = 2;
     public static final int MODE_ONLINE = 1;
 
 
-    private static WinuxLang instance;
+    private static LanguagePack instance;
     private int mode = 1;
     private String environment = ENVIRONMENT.PRODUCTION;
     private long updation_time = 1;
@@ -73,7 +67,7 @@ public class WinuxLang implements Cloneable {
         String PRODUCTION = "production";
     }
 
-    private WinuxLang() {
+    private LanguagePack() {
         if (instance != null) {
             throw new InstanceAlreadyCreatedException("Failed : " + INSTANCE_ALREADY_CREATED);
         }
@@ -83,17 +77,17 @@ public class WinuxLang implements Cloneable {
     /**
      * to init Winux language pack
      */
-    public static synchronized WinuxLang init() {
+    public static synchronized LanguagePack init() {
         if (instance == null) {
-            instance = new WinuxLang();
+            instance = new LanguagePack();
         }
         return instance;
     }
 
 
-    public static WinuxLang get() {
+    public static LanguagePack get() {
         if (instance == null) {
-            throw new InstanceNotFoundException("Configuration failed : please build config (WinuxLang.init().setMode(WinuxLang.MODE_ONLINE).setAuth(this).build();)");
+            throw new InstanceNotFoundException("Configuration failed : please build config (LanguagePack.init().setMode(LanguagePack.MODE_ONLINE).setAuth(this).build();)");
         }
         return instance;
     }
@@ -104,9 +98,9 @@ public class WinuxLang implements Cloneable {
      * online mode allows user to change values from admin control
      * in offline mode user have to download file from admin and should store it in res->raw folder
      *
-     * @param mode use WinuxLang.MODE_OFFLINE/WinuxLang.MODE_ONLINE
+     * @param mode use LanguagePack.MODE_OFFLINE/LanguagePack.MODE_ONLINE
      */
-    public WinuxLang setMode(int mode) {
+    public LanguagePack setMode(int mode) {
         this.mode = mode;
         return instance;
     }
@@ -115,10 +109,10 @@ public class WinuxLang implements Cloneable {
      * have two environment DEBUG or PRODUCTION
      * DEBUG - key/value changes available in 1 minute
      * PRODUCTION - key/value changes available in 1 hour or you can change using UPDATE_INTERVAL interface
-     *
-     * @param environment use WinuxLang.ENVIRONMENT.PRODUCTION/WinuxLang.ENVIRONMENT.DEBUG
+     *:
+     * @param environment use LanguagePack.ENVIRONMENT.PRODUCTION/LanguagePack.ENVIRONMENT.DEBUG
      */
-    public WinuxLang setEnvironment(String environment) {
+    public LanguagePack setEnvironment(String environment) {
         this.environment = environment;
         return instance;
     }
@@ -126,7 +120,7 @@ public class WinuxLang implements Cloneable {
     /**
      *
      */
-    public WinuxLang setCurrentLocale(String locale) {
+    public LanguagePack setCurrentLocale(String locale) {
 
         if (this.locale == null) {
             this.locale = locale;
@@ -146,7 +140,7 @@ public class WinuxLang implements Cloneable {
      *
      * @param updation_time use UPDATE_INTERVAL interface (Time in hours)
      */
-    public WinuxLang setUpdate(long updation_time) {
+    public LanguagePack setUpdate(long updation_time) {
         if (environment.equals(ENVIRONMENT.DEBUG)) {
             return instance;
         }
@@ -161,7 +155,7 @@ public class WinuxLang implements Cloneable {
      * @param account_id create account on admin and get account_id from portal
      * @param app_id     you can also find it after register your application package
      **/
-    public WinuxLang setAuth(Context context, String account_id, String app_id) {
+    public LanguagePack setAuth(Context context, String account_id, String app_id) {
         this.account_id = account_id;
         this.app_id = app_id;
         this.context = context;
@@ -169,7 +163,7 @@ public class WinuxLang implements Cloneable {
     }
 
 
-    public WinuxLang build() {
+    public LanguagePack build() {
 
         if (account_id == null || account_id.isEmpty()) {
             throw new ConfigFailedException("account_id not found");
@@ -201,12 +195,12 @@ public class WinuxLang implements Cloneable {
 
         }
 
-        if (mode == WinuxLang.MODE_OFFLINE) {
+        if (mode == LanguagePack.MODE_OFFLINE) {
             readDataFromFile();
             return instance;
         }
 
-        if (mode == WinuxLang.MODE_ONLINE) {
+        if (mode == LanguagePack.MODE_ONLINE) {
             int result = ContextCompat.checkSelfPermission(context.getApplicationContext(), Manifest.permission.INTERNET);
             if (result != PackageManager.PERMISSION_GRANTED) {
                 throw new ConfigFailedException("Internet permission required in manifest");
