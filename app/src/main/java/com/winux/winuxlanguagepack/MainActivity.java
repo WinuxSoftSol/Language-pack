@@ -24,12 +24,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LanguagePack.init()
-                .setMode(LanguagePack.MODE_ONLINE)
                 .setAuth(this, "15444", "154455544")
+                .setEnvironment(LanguagePack.ENVIRONMENT.PRODUCTION)
+                .setMode(LanguagePack.MODE_ONLINE)
                 .setUpdate(LanguagePack.UPDATE_INTERVAL.UPDATE_INTERVAL_2_HOUR)
                 .build();
 
-       final  List<String> alllocales = LanguagePack.get().getAllLocales();
+        final List<String> alllocales = LanguagePack.get().getAllLocales();
 
         laguage_text = findViewById(R.id.laguage_text);
         spinner_all_language = findViewById(R.id.spinner_all_language);

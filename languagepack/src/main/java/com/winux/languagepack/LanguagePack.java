@@ -261,7 +261,7 @@ public class LanguagePack implements Cloneable {
     }
 
 
-    public void setDailyAlarmOn(Context context, long alarmTime, long repeatTime) {
+    private void setDailyAlarmOn(Context context, long alarmTime, long repeatTime) {
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent operation =
                 DataUpdator.getReminderPendingIntent(context);
