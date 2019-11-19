@@ -93,6 +93,14 @@ public class LanguagePack implements Cloneable {
     }
 
 
+    public static boolean isBuild() {
+        if (instance == null) {
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * have two mode online or offline
      * online mode allows user to change values from admin control
@@ -109,7 +117,8 @@ public class LanguagePack implements Cloneable {
      * have two environment DEBUG or PRODUCTION
      * DEBUG - key/value changes available in 1 minute
      * PRODUCTION - key/value changes available in 1 hour or you can change using UPDATE_INTERVAL interface
-     *:
+     * :
+     *
      * @param environment use LanguagePack.ENVIRONMENT.PRODUCTION/LanguagePack.ENVIRONMENT.DEBUG
      */
     public LanguagePack setEnvironment(String environment) {
