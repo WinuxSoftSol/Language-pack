@@ -305,6 +305,18 @@ public class LanguagePack implements Cloneable {
     }
 
 
+    public String getCurrentLocaleFullName() {
+        if (locale == null) {
+            locale = context.getResources().getConfiguration().locale.getLanguage();
+        }
+
+        if (languageInnerModel == null) {
+            getDataModel(locale);
+        }
+        return languageInnerModel.getLanguage_name();
+    }
+
+
     public String getLocaleLanguage(String key) {
         if (locale == null) {
             locale = context.getResources().getConfiguration().locale.getLanguage();
@@ -326,6 +338,10 @@ public class LanguagePack implements Cloneable {
         }
         return alllocales;
     }
+
+
+
+
 
 
 }
