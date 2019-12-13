@@ -9,6 +9,7 @@ public class DataProccessor {
     public static final String KEY_STORE_FETCHING_DATA_URL = "DATA_URL";
     public static final String KEY_STORE_UPDATED_AT = "updated_at";
     public static final String KEY_STORE_UPDATE_TIME_INTERVAL = "time_interval";
+    public static final String KEY_REMEMBER_LAST_LOCALE = "last_known_locale";
 
     private Context context;
     private static DataProccessor instance;

@@ -44,7 +44,7 @@ public class LanguagePack implements Cloneable {
     private String package_name;
     private String account_id;
     private String app_id;
-    private String locale = null;
+    //private String locale = null;
     private boolean LOCALE_CHANGED = false;
     private Context context;
     private LanguageModel languageModel = null;
@@ -131,14 +131,14 @@ public class LanguagePack implements Cloneable {
      */
     public LanguagePack setCurrentLocale(String locale) {
 
-        if (this.locale == null) {
-            this.locale = locale;
+        if (DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE) == null) {
+            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, locale);
             return instance;
         }
 
-        if (!this.locale.equalsIgnoreCase(locale)) {
+        if (!DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE).equalsIgnoreCase(locale)) {
             LOCALE_CHANGED = true;
-            this.locale = locale;
+            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, locale);
         }
         return instance;
     }
@@ -306,6 +306,7 @@ public class LanguagePack implements Cloneable {
 
 
     public String getCurrentLocaleFullName() {
+        String locale = DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE);
         if (locale == null) {
             locale = context.getResources().getConfiguration().locale.getLanguage();
         }
@@ -318,6 +319,7 @@ public class LanguagePack implements Cloneable {
 
 
     public String getLocaleLanguage(String key) {
+        String locale = DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE);
         if (locale == null) {
             locale = context.getResources().getConfiguration().locale.getLanguage();
         }
@@ -340,8 +342,13 @@ public class LanguagePack implements Cloneable {
     }
 
 
-
-
+    public List<String> getAllSupportedLanguage() {
+        List<String> alllocales = new ArrayList<>();
+        for (int i = 0; i < languageModel.getAppData().size(); i++) {
+            alllocales.add(languageModel.getAppData().get(i).getLanguage_name());
+        }
+        return alllocales;
+    }
 
 
 }
