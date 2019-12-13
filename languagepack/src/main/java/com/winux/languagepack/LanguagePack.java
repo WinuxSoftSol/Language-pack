@@ -14,8 +14,10 @@ import com.google.gson.Gson;
 import com.winux.languagepack.exceptions.ConfigFailedException;
 import com.winux.languagepack.exceptions.InstanceAlreadyCreatedException;
 import com.winux.languagepack.exceptions.InstanceNotFoundException;
+import com.winux.languagepack.exceptions.LocaleNotFoundException;
 import com.winux.languagepack.models.LanguageInnerModel;
 import com.winux.languagepack.models.LanguageModel;
+import com.winux.languagepack.models.LocaleManager;
 import com.winux.languagepack.util.DataProccessor;
 import com.winux.languagepack.util.DataUpdator;
 import com.winux.languagepack.util.ResourceCreator;
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,16 +134,16 @@ public class LanguagePack implements Cloneable {
     /**
      *
      */
-    public LanguagePack setCurrentLocale(String locale) {
+    public LanguagePack setCurrentLocale(LocaleManager localeManager) {
 
         if (DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE) == null) {
-            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, locale);
+            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, localeManager.getLanguage());
             return instance;
         }
 
-        if (!DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE).equalsIgnoreCase(locale)) {
+        if (!DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE).equalsIgnoreCase(localeManager.getLanguage())) {
             LOCALE_CHANGED = true;
-            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, locale);
+            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, localeManager.getLanguage());
         }
         return instance;
     }
@@ -316,6 +319,7 @@ public class LanguagePack implements Cloneable {
         String locale = DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE);
         if (locale == null) {
             locale = context.getResources().getConfiguration().locale.getLanguage();
+            DataProccessor.getInstance(context).setString(DataProccessor.KEY_REMEMBER_LAST_LOCALE, locale);
         }
 
         if (languageInnerModel == null || LOCALE_CHANGED) {
@@ -344,15 +348,24 @@ public class LanguagePack implements Cloneable {
             }
         }
 
-        throw new ConfigFailedException("Locale not found");
+        throw new LocaleNotFoundException("Locale not found");
     }
 
 
-    /*to get all defined language full name*/
-    public List<String> getAllLanguage() {
-        List<String> mLanguage = new ArrayList<>();
+    /*to get all defined language full name */
+    public List<LocaleManager> getAllLanguage() {
+        List<LocaleManager> mLanguage = new ArrayList<>();
         for (int i = 0; i < languageModel.getAppData().size(); i++) {
-            mLanguage.addAll(languageModel.getAppData().get(i).getLocales().values());
+
+            Iterator<String> displayLanguage = languageModel.getAppData().get(i).getLocales().values().iterator();
+            Iterator<String> keys = languageModel.getAppData().get(i).getLocales().keySet().iterator();
+            while (keys.hasNext()) {
+                LocaleManager manager = new LocaleManager();
+                manager.setLanguage(keys.next());
+                manager.setLanguageDisplayName(displayLanguage.next());
+                mLanguage.add(manager);
+            }
+
         }
         return mLanguage;
     }
