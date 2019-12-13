@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class LanguageInnerModel {
     @SerializedName("locales")
-    private List<String> locales;
+    private Map<String, String> locales;
 
     @SerializedName("text")
     private Map<String, String> data;
@@ -15,11 +15,11 @@ public class LanguageInnerModel {
     @SerializedName("language_name")
     private String language_name;
 
-    public List<String> getLocales() {
+    public Map<String, String> getLocales() {
         return locales;
     }
 
-    public void setLocales(List<String> locales) {
+    public void setLocales(Map<String, String> locales) {
         this.locales = locales;
     }
 

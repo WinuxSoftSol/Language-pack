@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -292,7 +294,8 @@ public class LanguagePack implements Cloneable {
 
     private void getDataModel(String loc) {
         for (int i = 0; i < languageModel.getAppData().size(); i++) {
-            if (languageModel.getAppData().get(i).getLocales().contains(loc)) {
+            Set<String> listLocale = languageModel.getAppData().get(i).getLocales().keySet();
+            if (listLocale.contains(loc)) {
                 languageInnerModel = languageModel.getAppData().get(i);
             }
         }
@@ -304,17 +307,8 @@ public class LanguagePack implements Cloneable {
         return languageModel.getDefault_language();
     }
 
-
-    public String getCurrentLocaleFullName() {
-        String locale = DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE);
-        if (locale == null) {
-            locale = context.getResources().getConfiguration().locale.getLanguage();
-        }
-
-        if (languageInnerModel == null) {
-            getDataModel(locale);
-        }
-        return languageInnerModel.getLanguage_name();
+    public String getCurrentLocale() {
+        return DataProccessor.getInstance(context).getString(DataProccessor.KEY_REMEMBER_LAST_LOCALE);
     }
 
 
@@ -333,21 +327,34 @@ public class LanguagePack implements Cloneable {
                 : key;
     }
 
+
     public List<String> getAllLocales() {
         List<String> alllocales = new ArrayList<>();
         for (int i = 0; i < languageModel.getAppData().size(); i++) {
-            alllocales.addAll(languageModel.getAppData().get(i).getLocales());
+            alllocales.addAll(languageModel.getAppData().get(i).getLocales().keySet());
         }
         return alllocales;
     }
 
-
-    public List<String> getAllSupportedLanguage() {
-        List<String> alllocales = new ArrayList<>();
+    public String getLanguage(String locale) {
         for (int i = 0; i < languageModel.getAppData().size(); i++) {
-            alllocales.add(languageModel.getAppData().get(i).getLanguage_name());
+            Map<String, String> listLocale = languageModel.getAppData().get(i).getLocales();
+            if (listLocale.containsKey(locale)) {
+                return listLocale.get(locale);
+            }
         }
-        return alllocales;
+
+        throw new ConfigFailedException("Locale not found");
+    }
+
+
+    /*to get all defined language full name*/
+    public List<String> getAllLanguage() {
+        List<String> mLanguage = new ArrayList<>();
+        for (int i = 0; i < languageModel.getAppData().size(); i++) {
+            mLanguage.addAll(languageModel.getAppData().get(i).getLocales().values());
+        }
+        return mLanguage;
     }
 
 
